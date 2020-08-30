@@ -1,8 +1,9 @@
 import os
+import sys
 import pandas as pd
 from qa.pipeline import run_pipeline
 
-tdf = pd.read_pickle("../out/trainer.pkl")
+tdf = pd.read_pickle(sys.argv[2])
 
 true_set = tdf[tdf["is_correct"] == True]
 false_set = tdf[tdf["is_correct"] == False]
