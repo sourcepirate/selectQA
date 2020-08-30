@@ -2,6 +2,11 @@
 
 Selection based question answering model. Selects the most appropriate sentence for a question to answer.
 
+## Datasets used to prepare the model
+
+* SQUAD
+* TRECQA
+
 ## Usage
 
 ```python
