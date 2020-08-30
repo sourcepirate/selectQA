@@ -2,9 +2,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import VotingClassifier
-from sklearn.neighbors import NearestCentroid
 from qa.estimators import TextFeatureTransformer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
@@ -16,8 +14,6 @@ model_estimator = VotingClassifier(
         ("svc", SVC()),
         ("logistic", LogisticRegression()),
         ("guass", GaussianNB()),
-        ("dt", DecisionTreeClassifier()),
-        ("kmeans", NearestCentroid()),
     ],
     voting="hard",
 )

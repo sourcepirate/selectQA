@@ -15,7 +15,9 @@ class TextReader(object):
         """ preprocess corpus and query """
         qs = []
         for sent in nlp(corpus).sents:
-            qs.append({"question": query, "sentence": sent.text})
+            qs.append(
+                {"question": query.lower(), "sentence": sent.text.lower()}
+            )
         return pd.DataFrame(qs)
 
     def read(self, corpus, query):
@@ -25,5 +27,5 @@ class TextReader(object):
 
 
 reader = TextReader(
-    os.path.join(os.path.dirname(__file__), "../models/qa.sav")
+    os.path.join(os.path.dirname(__file__), "../models/qa.lzma")
 )

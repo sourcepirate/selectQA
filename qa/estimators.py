@@ -7,6 +7,7 @@ nlp = spacy.load("en")
 
 QUESTION_TOKENS = ["what", "who", "where", "when", "why"]
 POS_COUNTS = ["NOUN", "ADV", "VERB", "PROPN"]
+LABEL_COUNTS = ["PERSON", "ORG", "GPE", "NORP", "DATE"]
 
 
 def get_keyed_vectors(filepath: str, binary: bool = True) -> KeyedVectors:
@@ -34,6 +35,20 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
     def similarity(self, a: str, b: str) -> float:
         return self.w2v.wmdistance(a, b)
 
+    def apply_ner_features(self, X):
+        feature_tokens = []
+        for tag in LABEL_COUNTS:
+            feature_token = f"num_{tag.lower()}"
+            X.loc[:, f"a_{feature_token}"] = X["sentence"].apply(
+                lambda x: len([e for e in nlp(x).ents if e.label_ == tag])
+            )
+            X.loc[:, f"q_{feature_token}"] = X["question"].apply(
+                lambda x: len([e for e in nlp(x).ents if e.label_ == tag])
+            )
+            feature_tokens.append(f"q_{feature_token}")
+            feature_tokens.append(f"a_{feature_token}")
+        return X, feature_tokens
+
     def apply_question_tokens(self, X):
         feature_tokens = []
         for token in QUESTION_TOKENS:
@@ -48,12 +63,18 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
         feature_tokens = []
         for tag in POS_COUNTS:
             feature_token = f"{tag}_words"
-            X.loc[:, feature_token] = X["sentence"].apply(
+            X.loc[:, f"a_{feature_token}"] = X["sentence"].apply(
                 lambda row: len(
                     [x for x in nlp(row, disable=["ner"]) if x.pos_ == tag]
                 )
             )
-            feature_tokens.append(feature_token)
+            X.loc[:, f"q_{feature_token}"] = X["question"].apply(
+                lambda row: len(
+                    [x for x in nlp(row, disable=["ner"]) if x.pos_ == tag]
+                )
+            )
+            feature_tokens.append(f"q_{feature_token}")
+            feature_tokens.append(f"a_{feature_token}")
         return X, feature_tokens
 
     def transform(self, X, y=None):
@@ -66,5 +87,7 @@ class TextFeatureTransformer(BaseEstimator, TransformerMixin):
         )
         X, qt = self.apply_question_tokens(X)
         X, pt = self.apply_pos(X)
-        features = qt + pt + ["similarity", "matched"]
-        return X[features]
+        X, nt = self.apply_ner_features(X)
+        features = qt + pt + nt + ["similarity", "matched"]
+        x_feat = X[features]
+        return x_feat
