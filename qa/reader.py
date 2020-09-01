@@ -24,7 +24,7 @@ class TextReader(object):
         """ reading corpus and answering questions """
         df = self.preprocess(corpus, query)
         values = self._model.predict(df)
-        return df[values]
+        return df[values]["sentence"]
 
 
 try:
