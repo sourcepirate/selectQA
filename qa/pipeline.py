@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
@@ -12,7 +13,7 @@ from joblib import dump
 model_estimator = VotingClassifier(
     estimators=[
         ("svc", SVC()),
-        ("logistic", LogisticRegression()),
+        ("logistic", LogisticRegression(max_iter=1000)),
         ("guass", GaussianNB()),
     ],
     voting="hard",

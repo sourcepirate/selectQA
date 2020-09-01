@@ -37,3 +37,14 @@ python train.py ../out/train.pkl
 
 ```
 
+## Using a pretrained model
+
+``` python
+# download the model from the released.
+
+from qa.reader import TextReader
+
+reader = TextReader("path of the downloaded model")
+reader.read(context, query)
+
+```

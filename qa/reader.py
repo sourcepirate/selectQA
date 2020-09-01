@@ -23,7 +23,8 @@ class TextReader(object):
     def read(self, corpus, query):
         """ reading corpus and answering questions """
         df = self.preprocess(corpus, query)
-        return self._model.predict(df)
+        values = self._model.predict(df)
+        return df[values]
 
 
 reader = TextReader(
