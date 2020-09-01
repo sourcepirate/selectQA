@@ -27,6 +27,9 @@ class TextReader(object):
         return df[values]
 
 
-reader = TextReader(
-    os.path.join(os.path.dirname(__file__), "../models/qa.lzma")
-)
+try:
+    reader = TextReader(
+        os.path.join(os.path.dirname(__file__), "../models/qa.lzma")
+    )
+except Exception:
+    pass
