@@ -1,24 +1,14 @@
 ## QA
 
 Selection based question answering model. Selects the most appropriate sentence for a question to answer.
+Designed to run on few mb's of memory and very low CPU. 
+
+Approch uses text shallow features, NER and POS tag on question and answer pair.  The result may highly depends on the words used on the phrases. If you need more sophasticated solution try using RNN / Attention model.
 
 ## Datasets used to prepare the model
 
 * SQUAD
 * TRECQA
-
-## Usage
-
-```python
-
-from qa.reader import reader
-
-context = "context sentense here"
-query = "what is this ?"
-
-ans = reader.read(context, query)
-
-```
 
 ## Training the model 
 
@@ -27,13 +17,11 @@ ans = reader.read(context, query)
 
 cd data
 
-# download glove model
-
 cd scripts/
 
 python process.py --filename data/train-v2.0.json --out out/ --prefix train
 
-python train.py ../out/train.pkl
+python train.py ../out/train.pkl 100000 0.7
 
 ```
 
@@ -48,3 +36,4 @@ reader = TextReader("path of the downloaded model")
 reader.read(context, query)
 
 ```
+

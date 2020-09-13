@@ -25,11 +25,3 @@ class TextReader(object):
         df = self.preprocess(corpus, query)
         values = self._model.predict(df)
         return df[values]["sentence"]
-
-
-try:
-    reader = TextReader(
-        os.path.join(os.path.dirname(__file__), "../models/qa.lzma")
-    )
-except Exception:
-    pass
